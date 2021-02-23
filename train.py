@@ -1106,8 +1106,6 @@ def main():
 
             # save the model to WandB
             torch.save(model.state_dict(), os.path.join(wandb.run.dir, "model.pt"))
-            torch.onnx.export(model, "model.onnx")
-            wandb.save("model.onnx")
 
     except KeyboardInterrupt:
         pass
