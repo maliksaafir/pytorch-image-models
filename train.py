@@ -1040,6 +1040,8 @@ def main():
         with open(os.path.join(output_dir, "args.yaml"), "w") as f:
             f.write(args_text)
 
+    wandb.watch(model)
+
     try:
         for epoch in range(start_epoch, num_epochs):
             if args.distributed and hasattr(loader_train.sampler, "set_epoch"):
@@ -1134,8 +1136,6 @@ def train_one_epoch(
     batch_time_m = AverageMeter()
     data_time_m = AverageMeter()
     losses_m = AverageMeter()
-
-    wandb.watch(model)
 
     model.train()
 
