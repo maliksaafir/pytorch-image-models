@@ -760,7 +760,8 @@ def main():
             "Install NVIDA apex or upgrade to PyTorch 1.6"
         )
 
-    wandb.init(config=args, project="mobilenetv3-testing", entity="maliksaafir")
+    proj_name = input("enter the name of the WandB project this run is a part of: ")
+    wandb.init(config=args, project=proj_name, entity="maliksaafir")
 
     torch.manual_seed(args.seed + args.rank)
 
