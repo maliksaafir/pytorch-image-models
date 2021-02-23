@@ -760,8 +760,7 @@ def main():
             "Install NVIDA apex or upgrade to PyTorch 1.6"
         )
 
-    proj_name = input("enter a project name for WandB: ")
-    wandb.init(config=args, project=proj_name)
+    wandb.init(config=args, project="mobilenetv3-testing", entity="maliksaafir")
 
     torch.manual_seed(args.seed + args.rank)
 
@@ -1103,6 +1102,7 @@ def main():
                 best_metric, best_epoch = saver.save_checkpoint(
                     epoch, metric=save_metric
                 )
+            torch.save(model.state_dict(), os.path.join(wandb.run.dir, "model.pt"))
 
     except KeyboardInterrupt:
         pass
@@ -1215,7 +1215,7 @@ def train_one_epoch(
                         data_time=data_time_m,
                     )
                 )
-                wandb.log({"loss": loss})
+                wandb.log({"loss": losses_m.val})
 
                 if args.save_images and output_dir:
                     torchvision.utils.save_image(
@@ -1311,6 +1311,7 @@ def validate(model, loader, loss_fn, args, amp_autocast=suppress, log_suffix="")
                         top5=top5_m,
                     )
                 )
+                wandb.log({"acc-top-1": top1_m.val, "acc-top-5": top5_m.val})
 
     metrics = OrderedDict(
         [("loss", losses_m.avg), ("top1", top1_m.avg), ("top5", top5_m.avg)]
