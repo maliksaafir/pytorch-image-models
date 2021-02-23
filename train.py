@@ -1039,7 +1039,7 @@ def main():
         with open(os.path.join(output_dir, "args.yaml"), "w") as f:
             f.write(args_text)
 
-    wandb.watch(model)
+    wandb.watch(model)  # start watching the model for this run
 
     try:
         for epoch in range(start_epoch, num_epochs):
