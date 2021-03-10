@@ -761,7 +761,7 @@ def main():
         )
 
     proj_name = input("enter the name of the WandB project this run is a part of: ")
-    wandb.init(config=args, project=proj_name, entity="maliksaafir")
+    wandb.init(config=args, project=proj_name)
 
     torch.manual_seed(args.seed + args.rank)
 
@@ -1105,7 +1105,8 @@ def main():
                 )
 
             # save the model to WandB
-            torch.save(model.state_dict(), os.path.join(wandb.run.dir, "model.pt"))
+            torch.save(model.state_dict(), "model.pt")
+            wandb.save("model.pt")
 
     except KeyboardInterrupt:
         pass
