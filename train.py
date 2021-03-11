@@ -1041,6 +1041,7 @@ def main():
             f.write(args_text)
 
     wandb.watch(model)  # start watching the model for this run
+    print(model)  # display the architecture
 
     try:
         for epoch in range(start_epoch, num_epochs):
