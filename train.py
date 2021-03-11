@@ -1278,7 +1278,7 @@ def validate(model, loader, loss_fn, args, amp_autocast=suppress, log_suffix="")
                 target = target[0 : target.size(0) : reduce_factor]
 
             loss = loss_fn(output, target)
-            acc1 = accuracy(output, target)  # only care about top1
+            acc1 = accuracy(output, target)[0]  # only care about top1
 
             if args.distributed:
                 reduced_loss = reduce_tensor(loss.data, args.world_size)
