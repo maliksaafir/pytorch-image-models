@@ -1279,12 +1279,11 @@ def validate(model, loader, loss_fn, args, amp_autocast=suppress, log_suffix="")
                 target = target[0 : target.size(0) : reduce_factor]
 
             loss = loss_fn(output, target)
-            acc1, acc5 = accuracy(output, target, topk=(1, 5))
+            acc1 = accuracy(output, target, topk=1)  # only care about top1
 
             if args.distributed:
                 reduced_loss = reduce_tensor(loss.data, args.world_size)
                 acc1 = reduce_tensor(acc1, args.world_size)
-                acc5 = reduce_tensor(acc5, args.world_size)
             else:
                 reduced_loss = loss.data
 
@@ -1292,7 +1291,6 @@ def validate(model, loader, loss_fn, args, amp_autocast=suppress, log_suffix="")
 
             losses_m.update(reduced_loss.item(), input.size(0))
             top1_m.update(acc1.item(), output.size(0))
-            top5_m.update(acc5.item(), output.size(0))
 
             batch_time_m.update(time.time() - end)
             end = time.time()
@@ -1304,18 +1302,16 @@ def validate(model, loader, loss_fn, args, amp_autocast=suppress, log_suffix="")
                     "{0}: [{1:>4d}/{2}]  "
                     "Time: {batch_time.val:.3f} ({batch_time.avg:.3f})  "
                     "Loss: {loss.val:>7.4f} ({loss.avg:>6.4f})  "
-                    "Acc@1: {top1.val:>7.4f} ({top1.avg:>7.4f})  "
-                    "Acc@5: {top5.val:>7.4f} ({top5.avg:>7.4f})".format(
+                    "Acc@1: {top1.val:>7.4f} ({top1.avg:>7.4f})  ".format(
                         log_name,
                         batch_idx,
                         last_idx,
                         batch_time=batch_time_m,
                         loss=losses_m,
                         top1=top1_m,
-                        top5=top5_m,
                     )
                 )
-                wandb.log({"acc-top-1": top1_m.val, "acc-top-5": top5_m.val})
+                wandb.log({"acc-top-1": top1_m.val})
 
     metrics = OrderedDict(
         [("loss", losses_m.avg), ("top1", top1_m.avg), ("top5", top5_m.avg)]
