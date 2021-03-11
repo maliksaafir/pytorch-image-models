@@ -77,7 +77,11 @@ def _smaller_dset_cfg(url="", **kwargs):
 
 default_cfgs = {
     "mobilenetv3_large_075": _cfg(url=""),
-    "mobilenetv3_large_100": _cfg(
+    # "mobilenetv3_large_100": _cfg(
+    #     interpolation="bicubic",
+    #     url="https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-weights/mobilenetv3_large_100_ra-f55367f5.pth",
+    # ),
+    "mobilenetv3_large_100": _smaller_dset_cfg(
         interpolation="bicubic",
         url="https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-weights/mobilenetv3_large_100_ra-f55367f5.pth",
     ),
