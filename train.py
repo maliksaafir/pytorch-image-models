@@ -1252,7 +1252,6 @@ def validate(model, loader, loss_fn, args, amp_autocast=suppress, log_suffix="")
     batch_time_m = AverageMeter()
     losses_m = AverageMeter()
     top1_m = AverageMeter()
-    top5_m = AverageMeter()
 
     model.eval()
 
@@ -1314,7 +1313,7 @@ def validate(model, loader, loss_fn, args, amp_autocast=suppress, log_suffix="")
                 wandb.log({"acc-top-1": top1_m.val})
 
     metrics = OrderedDict(
-        [("loss", losses_m.avg), ("top1", top1_m.avg), ("top5", top5_m.avg)]
+        [("loss", losses_m.avg), ("top1", top1_m.avg)]
     )
 
     return metrics
