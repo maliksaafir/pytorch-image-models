@@ -1105,7 +1105,7 @@ def main():
                 )
 
             # save the model to WandB
-            torch.save(model.state_dict(), "model.pt")
+            torch.save(get_state_dict(model), "model.pt")
             wandb.save("model.pt")
 
     except KeyboardInterrupt:
