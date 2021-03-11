@@ -324,6 +324,7 @@ def _create_mnv3(model_kwargs, variant, pretrained=False):
 
 
 def _gen_mobilenet_v3_mod(variant, channel_multiplier=1.0, pretrained=False, **kwargs):
+    print(f"creating modified mblnetv3 with variant {variant}")
     """ Creates a modified MoibleNet-V3 model.
 
     Args:
@@ -598,6 +599,7 @@ def mobilenetv3_large_100(pretrained=False, **kwargs):
 @register_model
 def mobilenetv3_large_100_modified_no_se(pretrained=False, **kwargs):
     """ Modified MobileNet V3 """
+    print("generating modified mblnetv3")
     model = _gen_mobilenet_v3_mod(
         "mobilenetv3_large_100_modified_no_se", 1.0, pretrained=pretrained, **kwargs
     )
