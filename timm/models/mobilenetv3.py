@@ -85,16 +85,12 @@ default_cfgs = {
         interpolation="bicubic",
         url="https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-weights/mobilenetv3_large_100_ra-f55367f5.pth",
     ),
-    "mobilenetv3_large_200": _smaller_dset_cfg(
-        interpolation="bicubic",
-        url="https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-weights/mobilenetv3_large_100_ra-f55367f5.pth",
-    ),
-    "mobilenetv3_large_400": _smaller_dset_cfg(
-        interpolation="bicubic",
-        url="https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-weights/mobilenetv3_large_100_ra-f55367f5.pth",
-    ),
     "mobilenetv3_large_100_modified_no_se": _smaller_dset_cfg(url=""),
+    "mobilenetv3_large_200_modified_no_se": _smaller_dset_cfg(url=""),
+    "mobilenetv3_large_400_modified_no_se": _smaller_dset_cfg(url=""),
     "mobilenetv3_large_100_modified_no_se_no_ir": _smaller_dset_cfg(url=""),
+    "mobilenetv3_large_200_modified_no_se_no_ir": _smaller_dset_cfg(url=""),
+    "mobilenetv3_large_400_modified_no_se_no_ir": _smaller_dset_cfg(url=""),
     "mobilenetv3_small_075": _cfg(url=""),
     "mobilenetv3_small_100": _cfg(url=""),
     "mobilenetv3_rw": _cfg(
@@ -663,29 +659,31 @@ def mobilenetv3_large_100(pretrained=False, **kwargs):
 
 
 @register_model
-def mobilenetv3_large_200(pretrained=False, **kwargs):
-    """ Standard MobileNet V3 with 2.0 channel multiplier """
-    model = _gen_mobilenet_v3(
-        "mobilenetv3_large_200", 2.0, pretrained=pretrained, **kwargs
-    )
-    return model
-
-
-@register_model
-def mobilenetv3_large_400(pretrained=False, **kwargs):
-    """ Standard MobileNet V3 with 4.0 channel multiplier """
-    model = _gen_mobilenet_v3(
-        "mobilenetv3_large_400", 4.0, pretrained=pretrained, **kwargs
-    )
-    return model
-
-
-@register_model
 def mobilenetv3_large_100_modified_no_se(pretrained=False, **kwargs):
     """ Modified MobileNet V3 (no squeeze & excite) """
     print("generating modified mblnetv3")
     model = _gen_mobilenet_v3_mod(
         "mobilenetv3_large_100_modified_no_se", 1.0, pretrained=pretrained, **kwargs
+    )
+    return model
+
+
+@register_model
+def mobilenetv3_large_200_modified_no_se(pretrained=False, **kwargs):
+    """ Modified MobileNet V3 (no squeeze & excite) width mult 2.0"""
+    print("generating modified mblnetv3")
+    model = _gen_mobilenet_v3_mod(
+        "mobilenetv3_large_200_modified_no_se", 2.0, pretrained=pretrained, **kwargs
+    )
+    return model
+
+
+@register_model
+def mobilenetv3_large_400_modified_no_se(pretrained=False, **kwargs):
+    """ Modified MobileNet V3 (no squeeze & excite) width mult 4.0"""
+    print("generating modified mblnetv3")
+    model = _gen_mobilenet_v3_mod(
+        "mobilenetv3_large_400_modified_no_se", 4.0, pretrained=pretrained, **kwargs
     )
     return model
 
@@ -697,6 +695,32 @@ def mobilenetv3_large_100_modified_no_se_no_ir(pretrained=False, **kwargs):
     model = _gen_mobilenet_v3_mod(
         "mobilenetv3_large_100_modified_no_se_no_ir",
         1.0,
+        pretrained=pretrained,
+        **kwargs,
+    )
+    return model
+
+
+@register_model
+def mobilenetv3_large_200_modified_no_se_no_ir(pretrained=False, **kwargs):
+    """ Modified MobileNet V3 (no squeeze & excite or inverted residual) width mult 2.0"""
+    print("generating modified mblnetv3")
+    model = _gen_mobilenet_v3_mod(
+        "mobilenetv3_large_200_modified_no_se_no_ir",
+        2.0,
+        pretrained=pretrained,
+        **kwargs,
+    )
+    return model
+
+
+@register_model
+def mobilenetv3_large_400_modified_no_se_no_ir(pretrained=False, **kwargs):
+    """ Modified MobileNet V3 (no squeeze & excite or inverted residual) width mult 4.0"""
+    print("generating modified mblnetv3")
+    model = _gen_mobilenet_v3_mod(
+        "mobilenetv3_large_400_modified_no_se_no_ir",
+        4.0,
         pretrained=pretrained,
         **kwargs,
     )
