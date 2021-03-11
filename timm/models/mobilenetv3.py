@@ -85,6 +85,14 @@ default_cfgs = {
         interpolation="bicubic",
         url="https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-weights/mobilenetv3_large_100_ra-f55367f5.pth",
     ),
+    "mobilenetv3_large_200": _smaller_dset_cfg(
+        interpolation="bicubic",
+        url="https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-weights/mobilenetv3_large_100_ra-f55367f5.pth",
+    ),
+    "mobilenetv3_large_400": _smaller_dset_cfg(
+        interpolation="bicubic",
+        url="https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-weights/mobilenetv3_large_100_ra-f55367f5.pth",
+    ),
     "mobilenetv3_large_100_modified_no_se": _smaller_dset_cfg(url=""),
     "mobilenetv3_large_200_modified_no_se": _smaller_dset_cfg(url=""),
     "mobilenetv3_large_400_modified_no_se": _smaller_dset_cfg(url=""),
@@ -693,6 +701,24 @@ def mobilenetv3_large_100(pretrained=False, **kwargs):
     """ MobileNet V3 """
     model = _gen_mobilenet_v3(
         "mobilenetv3_large_100", 1.0, pretrained=pretrained, **kwargs
+    )
+    return model
+
+
+@register_model
+def mobilenetv3_large_200(pretrained=False, **kwargs):
+    """ MobileNet V3 """
+    model = _gen_mobilenet_v3(
+        "mobilenetv3_large_200", 2.0, pretrained=pretrained, **kwargs
+    )
+    return model
+
+
+@register_model
+def mobilenetv3_large_400(pretrained=False, **kwargs):
+    """ MobileNet V3 """
+    model = _gen_mobilenet_v3(
+        "mobilenetv3_large_400", 4.0, pretrained=pretrained, **kwargs
     )
     return model
 
