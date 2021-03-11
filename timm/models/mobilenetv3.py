@@ -598,7 +598,7 @@ def mobilenetv3_large_100(pretrained=False, **kwargs):
 @register_model
 def mobilenetv3_large_100_modified_no_se(pretrained=False, **kwargs):
     """ Modified MobileNet V3 """
-    model = _gen_mobilenet_v3(
+    model = _gen_mobilenet_v3_mod(
         "mobilenetv3_large_100_modified_no_se", 1.0, pretrained=pretrained, **kwargs
     )
     return model
