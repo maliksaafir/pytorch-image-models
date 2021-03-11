@@ -59,13 +59,29 @@ def _cfg(url="", **kwargs):
     }
 
 
+def _smaller_dset_cfg(url="", **kwargs):
+    return {
+        "url": url,
+        "num_classes": 2,
+        "input_size": (3, 224, 224),
+        "pool_size": (1, 1),
+        "crop_pct": 0.875,
+        "interpolation": "bilinear",
+        "mean": IMAGENET_DEFAULT_MEAN,
+        "std": IMAGENET_DEFAULT_STD,
+        "first_conv": "conv_stem",
+        "classifier": "classifier",
+        **kwargs,
+    }
+
+
 default_cfgs = {
     "mobilenetv3_large_075": _cfg(url=""),
     "mobilenetv3_large_100": _cfg(
         interpolation="bicubic",
         url="https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-weights/mobilenetv3_large_100_ra-f55367f5.pth",
     ),
-    "mobilenetv3_large_100_modified_no_se": _cfg(url=""),
+    "mobilenetv3_large_100_modified_no_se": _smaller_dset_cfg(url=""),
     "mobilenetv3_small_075": _cfg(url=""),
     "mobilenetv3_small_100": _cfg(url=""),
     "mobilenetv3_rw": _cfg(
