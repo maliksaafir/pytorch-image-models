@@ -91,6 +91,9 @@ default_cfgs = {
     "mobilenetv3_large_100_modified_no_se_no_ir": _smaller_dset_cfg(url=""),
     "mobilenetv3_large_200_modified_no_se_no_ir": _smaller_dset_cfg(url=""),
     "mobilenetv3_large_400_modified_no_se_no_ir": _smaller_dset_cfg(url=""),
+    "mobilenetv3_large_100_modified_no_se_no_ir_no_ds": _smaller_dset_cfg(url=""),
+    "mobilenetv3_large_200_modified_no_se_no_ir_no_ds": _smaller_dset_cfg(url=""),
+    "mobilenetv3_large_400_modified_no_se_no_ir_no_ds": _smaller_dset_cfg(url=""),
     "mobilenetv3_small_075": _cfg(url=""),
     "mobilenetv3_small_100": _cfg(url=""),
     "mobilenetv3_rw": _cfg(
@@ -359,7 +362,22 @@ def _gen_mobilenet_v3_mod(variant, channel_multiplier=1.0, pretrained=False, **k
     if "small" in variant:
         num_features = 1024
         act_layer = resolve_act_layer(kwargs, "hard_swish")
-        if "no_ir" in variant and "no_se" in variant:
+        if "no_ir" in variant and "no_se" in variant and "no_ds" in variant:
+            arch_def = arch_def = [
+                # stage 0, 112x112 in
+                ["cn_r1_k3_s2_c16_nre"],  # relu
+                # stage 1, 56x56 in
+                ["cn_r1_k3_s2_c24_nre", "cn_r1_k3_s1_c24_nre"],  # relu
+                # stage 2, 28x28 in
+                ["cn_r1_k5_s2_c40", "cn_r2_k5_s1_c40",],  # hard-swish
+                # stage 3, 14x14 in
+                ["cn_r2_k5_s1_c48"],  # hard-swish
+                # stage 4, 14x14in
+                ["cn_r3_k5_s2_c96"],  # hard-swish
+                # stage 6, 7x7 in
+                ["cn_r1_k1_s1_c576"],  # hard-swish
+            ]
+        elif "no_ir" in variant and "no_se" in variant:
             arch_def = arch_def = [
                 # stage 0, 112x112 in
                 ["ds_r1_k3_s2_e1_c16_nre"],  # relu
@@ -410,6 +428,27 @@ def _gen_mobilenet_v3_mod(variant, channel_multiplier=1.0, pretrained=False, **k
     else:
         num_features = 1280
         act_layer = resolve_act_layer(kwargs, "hard_swish")
+        if "no_ir" in variant and "no_se" in variant and "no_ds" in variant:
+            arch_def = [
+                # stage 0, 112x112 in
+                ["cn_r1_k3_s1_c16_nre"],  # relu
+                # stage 1, 112x112 in
+                ["cn_r1_k3_s2_c24_nre", "cn_r1_k3_s1_c24_nre"],  # relu
+                # stage 2, 56x56 in
+                ["cn_r3_k5_s2_c40_nre"],  # relu
+                # stage 3, 28x28 in
+                [
+                    "cn_r1_k3_s2_c80",
+                    "cn_r1_k3_s1_c80",
+                    "cn_r2_k3_s1_c80",
+                ],  # hard-swish
+                # stage 4, 14x14in
+                ["cn_r2_k3_s1_c112"],  # hard-swish
+                # stage 5, 14x14in
+                ["cn_r3_k5_s2_c160"],  # hard-swish
+                # stage 6, 7x7 in
+                ["cn_r1_k1_s1_c960"],  # hard-swish
+            ]
         if "no_ir" in variant and "no_se" in variant:
             arch_def = [
                 # stage 0, 112x112 in
@@ -660,8 +699,9 @@ def mobilenetv3_large_100(pretrained=False, **kwargs):
 
 @register_model
 def mobilenetv3_large_100_modified_no_se(pretrained=False, **kwargs):
-    """ Modified MobileNet V3 (no squeeze & excite) """
-    print("generating modified mblnetv3")
+    """ Modified MobileNet V3
+        Excluding:
+            squeeze & excitation """
     model = _gen_mobilenet_v3_mod(
         "mobilenetv3_large_100_modified_no_se", 1.0, pretrained=pretrained, **kwargs
     )
@@ -670,8 +710,10 @@ def mobilenetv3_large_100_modified_no_se(pretrained=False, **kwargs):
 
 @register_model
 def mobilenetv3_large_200_modified_no_se(pretrained=False, **kwargs):
-    """ Modified MobileNet V3 (no squeeze & excite) width mult 2.0"""
-    print("generating modified mblnetv3")
+    """ Modified MobileNet V3
+        Excluding:
+            squeeze & excitation
+        Width mult 2.0 """
     model = _gen_mobilenet_v3_mod(
         "mobilenetv3_large_200_modified_no_se", 2.0, pretrained=pretrained, **kwargs
     )
@@ -680,8 +722,10 @@ def mobilenetv3_large_200_modified_no_se(pretrained=False, **kwargs):
 
 @register_model
 def mobilenetv3_large_400_modified_no_se(pretrained=False, **kwargs):
-    """ Modified MobileNet V3 (no squeeze & excite) width mult 4.0"""
-    print("generating modified mblnetv3")
+    """ Modified MobileNet V3
+        Excluding:
+            squeeze & excitation
+        Width mult 4.0 """
     model = _gen_mobilenet_v3_mod(
         "mobilenetv3_large_400_modified_no_se", 4.0, pretrained=pretrained, **kwargs
     )
@@ -690,8 +734,10 @@ def mobilenetv3_large_400_modified_no_se(pretrained=False, **kwargs):
 
 @register_model
 def mobilenetv3_large_100_modified_no_se_no_ir(pretrained=False, **kwargs):
-    """ Modified MobileNet V3 (no squeeze & excite or inverted residual) """
-    print("generating modified mblnetv3")
+    """ Modified MobileNet V3
+        Excluding:
+            squeeze & excitation
+            inverted residuals """
     model = _gen_mobilenet_v3_mod(
         "mobilenetv3_large_100_modified_no_se_no_ir",
         1.0,
@@ -703,8 +749,11 @@ def mobilenetv3_large_100_modified_no_se_no_ir(pretrained=False, **kwargs):
 
 @register_model
 def mobilenetv3_large_200_modified_no_se_no_ir(pretrained=False, **kwargs):
-    """ Modified MobileNet V3 (no squeeze & excite or inverted residual) width mult 2.0"""
-    print("generating modified mblnetv3")
+    """ Modified MobileNet V3
+        Excluding
+            squeeze & excitation
+            inverted residuals
+        Width mult 2.0 """
     model = _gen_mobilenet_v3_mod(
         "mobilenetv3_large_200_modified_no_se_no_ir",
         2.0,
@@ -716,10 +765,63 @@ def mobilenetv3_large_200_modified_no_se_no_ir(pretrained=False, **kwargs):
 
 @register_model
 def mobilenetv3_large_400_modified_no_se_no_ir(pretrained=False, **kwargs):
-    """ Modified MobileNet V3 (no squeeze & excite or inverted residual) width mult 4.0"""
-    print("generating modified mblnetv3")
+    """ Modified MobileNet V3
+        Excluding:
+            squeeze & excitation
+            inverted residuals
+        Width mult 4.0 """
     model = _gen_mobilenet_v3_mod(
         "mobilenetv3_large_400_modified_no_se_no_ir",
+        4.0,
+        pretrained=pretrained,
+        **kwargs,
+    )
+    return model
+
+
+@register_model
+def mobilenetv3_large_100_modified_no_se_no_ir_no_ds(pretrained=False, **kwargs):
+    """ Modified MobileNet V3
+        Excluding:
+            squeeze & excitation
+            inverted residual
+            depthwise separable convs """
+    model = _gen_mobilenet_v3_mod(
+        "mobilenetv3_large_100_modified_no_se_no_ir_no_ds",
+        1.0,
+        pretrained=pretrained,
+        **kwargs,
+    )
+    return model
+
+
+@register_model
+def mobilenetv3_large_200_modified_no_se_no_ir_no_ds(pretrained=False, **kwargs):
+    """ Modified MobileNet V3
+        Excluding:
+            squeeze & excitation
+            inverted residual
+            depthwise separable convs
+        Width mult 2.0 """
+    model = _gen_mobilenet_v3_mod(
+        "mobilenetv3_large_200_modified_no_se_no_ir_no_ds",
+        2.0,
+        pretrained=pretrained,
+        **kwargs,
+    )
+    return model
+
+
+@register_model
+def mobilenetv3_large_400_modified_no_se_no_ir_no_ds(pretrained=False, **kwargs):
+    """ Modified MobileNet V3
+        Excluding:
+            squeeze & excitation
+            inverted residual
+            depthwise separable convs
+        Width mult 4.0 """
+    model = _gen_mobilenet_v3_mod(
+        "mobilenetv3_large_400_modified_no_se_no_ir_no_ds",
         4.0,
         pretrained=pretrained,
         **kwargs,
