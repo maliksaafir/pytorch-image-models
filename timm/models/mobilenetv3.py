@@ -457,7 +457,7 @@ def _gen_mobilenet_v3_mod(variant, channel_multiplier=1.0, pretrained=False, **k
                 # stage 6, 7x7 in
                 ["cn_r1_k1_s1_c960"],  # hard-swish
             ]
-        if "no_ir" in variant and "no_se" in variant:
+        elif "no_ir" in variant and "no_se" in variant:
             arch_def = [
                 # stage 0, 112x112 in
                 ["ds_r1_k3_s1_e1_c16_nre"],  # relu
