@@ -1220,7 +1220,13 @@ def train_one_epoch(
                         data_time=data_time_m,
                     )
                 )
-                wandb.log({"loss": losses_m.val})
+                wandb.log(
+                    {
+                        "training loss": losses_m.val,
+                        "avg training loss": losses_m.avg,
+                        "lr": lr,
+                    }
+                )
 
                 if args.save_images and output_dir:
                     torchvision.utils.save_image(
@@ -1311,11 +1317,15 @@ def validate(model, loader, loss_fn, args, amp_autocast=suppress, log_suffix="")
                         top1=top1_m,
                     )
                 )
-                wandb.log({"acc-top-1": top1_m.val})
+                wandb.log(
+                    {
+                        "acc-top-1": top1_m.val,
+                        "validation loss": losses_m.val,
+                        "avg validation loss": losses_m.avg,
+                    }
+                )
 
-    metrics = OrderedDict(
-        [("loss", losses_m.avg), ("top1", top1_m.avg)]
-    )
+    metrics = OrderedDict([("loss", losses_m.avg), ("top1", top1_m.avg)])
 
     return metrics
 
