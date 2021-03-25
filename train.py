@@ -1113,6 +1113,7 @@ def main():
         pass
     if best_metric is not None:
         _logger.info("*** Best metric: {0} (epoch {1})".format(best_metric, best_epoch))
+        wandb.run.summary["best top 1 accuracy"] = best_metric
 
 
 def train_one_epoch(
