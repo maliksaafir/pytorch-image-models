@@ -1224,7 +1224,7 @@ def train_one_epoch(
                     {
                         "training loss": losses_m.val,
                         "avg training loss": losses_m.avg,
-                        "lr": lr,
+                        "learning rate": lr,
                     }
                 )
 
